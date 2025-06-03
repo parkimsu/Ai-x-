@@ -7,4 +7,5 @@
 박준호 | 데이터사이언스 전공 | 2023076508 | dpsxlwnsgh@naver.com
 
 하영현 | 전기공학 전공 | 2025062179 | voltha123@hanyang.ac.kr
-# Motivation
+# Proposal (Option A)
+### Motivation:
