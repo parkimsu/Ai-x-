@@ -1,6 +1,18 @@
 # Ai-x-딥러닝
 # Table of Contents
-[Title](#Title)
+[I. Title](#Title)
+
+[I. Members](#Members)
+
+[I. Proposal](#Proposal)
+
+[I. Datasets](#Datasets)
+
+[I. Methodology](#Methodology)
+
+[I. Evaluation & Analysis](#Evaluation & Analysis)
+
+[I. Related Work](#Related Work)
 # Title
 ### LSTM을 이용한 축구경기 결과 예측
 # Members
