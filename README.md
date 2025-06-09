@@ -2,17 +2,17 @@
 # Table of Contents
 [I. Title](#Title)
 
-[I. Members](#Members)
+[II. Members](#Members)
 
-[I. Proposal](#Proposal)
+[III. Proposal](#Proposal)
 
-[I. Datasets](#Datasets)
+[IV. Datasets](#Datasets)
 
-[I. Methodology](#Methodology)
+[V. Methodology](#Methodology)
 
-[I. Evaluation & Analysis](#Evaluation_&_Analysis)
+[VI. Evaluation & Analysis](#Evaluation_&_Analysis)
 
-[I. Related Work](#Related_Work)
+[VII. Related Work](#Related_Work)
 # Title
 ### LSTM을 이용한 축구경기 결과 예측
 # Members
