@@ -23,3 +23,7 @@ LSTM은 데이터를 시간순으로 넣으면 과거 경기들의 영향력을 
 어떤 선수가 부진하거나, 새로운 전술을 시도 할 경우 LSTM은 이 정보를 기억했다가 중요할때 활용합니다.
 
 저희는 이 LSTM을 이용하여 홈팀의 승, 원정팀의 승, 무승부 등을 예측하는 모델을 만들 것입니다.
+# Datasets
+# Methodology
+# Evaluation & Analysis
+# Related Work
