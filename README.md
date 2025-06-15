@@ -53,5 +53,17 @@ LSTM도 똑같이 체인 구조를 가지고 있지만, 4개의 Layer가 특별�
 
 ![딥러닝3](https://github.com/user-attachments/assets/8e43ee6c-bb60-4a28-a87a-d77d54ad7901)
 
+LSTM은 위의 그림과 같이 총 6개의 파라미터와 4개의 게이트로 이루어져 있습니다.
+
+Cell state는 LSTM의 기억 저장소 역할을 하며, 수평선처럼 전체 시퀀스를 따라 흐르는 경로입니다. 이는 컨베이어 벨트처럼 작동하여, 작은 선형 변화만 적용하며 정보를 전달합니다. 덕분에 정보 손실이 적고, 시간이 오래 지나도 Gradient가 잘 전파됩니다.
+
+Forget Gate는 과거 정보를 얼마나 유지할지 결정하는 역할을 합니다. 결과는 0과 1 사이의 값으로, 1에 가까울수록 정보를 보존하고 0에 가까울수록 정보를 제거합니다.
+
+Input Gate는 현재 정보를 기억하기 위한 게이트 입니다. 현재의 Cell state 값에 얼마나 더할지 말지를 정하는 역할을 합니다.
+
+Update는 Forget Gate와 Input Gate의 출력을 활용해 이루어지며, Forget Gate는 이전 기억에서 얼마나 버릴지, Input Gate는 새로운 정보를 얼마나 더할지 결정합니다.
+
+Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종적으로 얻어진 Cell State 값을 얼마나 빼낼지 결정하는 역할을 해줍니다.
+
 # Evaluation & Analysis
 # Related Work
