@@ -65,5 +65,7 @@ Update는 Forget Gate와 Input Gate의 출력을 활용해 이루어지며, Forg
 
 Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종적으로 얻어진 Cell State 값을 얼마나 빼낼지 결정하는 역할을 해줍니다.
 
+### Data Preprocessing and Sequence Formation for Model Input
+
 # Evaluation & Analysis
 # Related Work
