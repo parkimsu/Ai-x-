@@ -74,6 +74,30 @@ Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종
 
 ![딥러닝5](https://github.com/user-attachments/assets/7b439006-1fd3-48e5-9779-b4509f67497f)
 
+### 모델 입력 구조
+모델은 총 세 개의 입력을 받습니다.
+
+num_input: 홈/원정 경기의 수치형 시계열 피처.shape = (batch_size, 10, 16)
+
+home_id_input: 홈팀 ID 시퀀스.shape = (batch_size, 10)
+
+away_id_input: 원정팀 ID 시퀀스.shape = (batch_size, 10)
+
+팀 ID는 고정된 벡터가 아닌 시퀀스 형태로 넣고, Embedding을 거쳐 수치피처와 동일한 시계열 공간에서 처리될 수 있도록 구성합니다.
+
+### Embedding 및 Concatenation
+팀 ID(home_id, away_id)는 Embedding(N_TEAMS, 8)을 거쳐 8차원 벡터로 변환됩니다.
+
+그 후, TimeDistributed(Dense(8))층을 통해 각 시간 단계마다 추가적인 표현력을 갖도록 변환됩니다. 즉 단순한 팀 벡터가 아니라, 경기에 따라 달라질 수 있는 벡터로 보완됩니다. 
+
+이렇게 변환된 임베딩 벡터는 수치형 경기 기록 피처, 홈팀 임베딩 벡터, 원정팀 임베딩 벡터로 결합됩니다.
+
+세 가지를 하나의 시퀀스 피처로 합치면 각 시점의 입력 벡터는 최종적으로 32차원이 됩니다.
+
+즉, 최종 입력 데이터는 shape = (batch_size, 10, 32)로 구성되며, 이는 10경기의 각 시점마다 32개의 특성을 갖는 시계열 데이터라고 할 수 있습니다.
+
+
+
 
 # Evaluation & Analysis
 # Related Work
