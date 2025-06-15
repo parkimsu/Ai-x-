@@ -39,5 +39,11 @@ LSTM은 데이터를 시간순으로 넣으면 과거 경기들의 영향력을 
 저희는 이 LSTM을 이용하여 홈팀의 승, 원정팀의 승, 무승부 등을 예측하는 모델을 만들 것입니다.
 # Datasets
 # Methodology
+본 프로젝트에서는 EPL 경기 결과 예측을 위한 시계열 분류 모델로 LSTM(Long Short-Term Memory) 기반 딥러닝 모델을 구성하였으며, 클래스 불균형 문제를 완화하기 위해 Focal Loss를 손실 함수로 채택하였습니다.
+#### What is LSTM?
+LSTM은 RNN의 한 종류로, 기존 RNN이 가진 장기 의존성 문제(long-term dependency)를 해결하기 위해 고안된 모델입니다.
+이는 단순히 바로 이전 정보뿐만 아니라, 더 과거의 중요한 정보를 장기적으로 기억하고 반영하여 미래 값을 예측할 수 있도록 설계되었습니다.
+![LSTM구조](https://github.com/user-attachments/assets/5d643bf1-a4fe-445f-8b2f-69bf304d6ed3)
+
 # Evaluation & Analysis
 # Related Work
