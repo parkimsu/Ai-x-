@@ -40,7 +40,7 @@ LSTM은 데이터를 시간순으로 넣으면 과거 경기들의 영향력을 
 # Datasets
 # Methodology
 본 프로젝트에서는 EPL 경기 결과 예측을 위한 시계열 분류 모델로 LSTM(Long Short-Term Memory) 기반 딥러닝 모델을 구성하였으며, 클래스 불균형 문제를 완화하기 위해 Focal Loss를 손실 함수로 채택하였습니다.
-#### What is LSTM?
+### What is LSTM?
 LSTM은 RNN의 한 종류로, 기존 RNN이 가진 장기 의존성 문제(long-term dependency)를 해결하기 위해 고안된 모델입니다.
 이는 단순히 바로 이전 정보뿐만 아니라, 더 과거의 중요한 정보를 장기적으로 기억하고 반영하여 미래 값을 예측할 수 있도록 설계되었습니다.
 ![LSTM구조](https://github.com/user-attachments/assets/5d643bf1-a4fe-445f-8b2f-69bf304d6ed3)
@@ -65,7 +65,15 @@ Update는 Forget Gate와 Input Gate의 출력을 활용해 이루어지며, Forg
 
 Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종적으로 얻어진 Cell State 값을 얼마나 빼낼지 결정하는 역할을 해줍니다.
 
-### Data Preprocessing and Sequence Formation for Model Input
+### 데이터 전처리 및 시계열 입력 구성
+각 경기는 하나의 샘플이 아니라 과거 경기 기록들을 기반으로 한 시계열(sequence)로 처리됩니다. 구체적으로, 각 팀에 대해 과거 SEQ_LEN = 10개의 경기를 기반으로 피처 벡터를 만들고, 해당 팀이 이후에 치른 경기에 대한 실제 결과(FTR_encoded)를 레이블로 사용합니다.
+
+입력 피처는 경기 기록 지표 (FTHG, FTAG, HST, AST, HY, AY 등)로 구성된 16차원의 수치 벡터입니다.
+
+각 팀에 대해 홈 경기/원정 경기 모두를 고려해 순서대로 데이터를 정렬한 후, 슬라이딩 윈도우 방식으로 시퀀스를 생성합니다. 시퀀스 길이는 10으로 고정됩니다. 추가적으로 팀 ID를 Embedding 처리하기 위해 home_id, away_id를 LabelEncoder를 통해 정수 인코딩한 후, 이를 시퀀스 정체 길이에 맞게 복제하여 LSTM의 입력으로 사용합니다.
+
+![딥러닝5](https://github.com/user-attachments/assets/7b439006-1fd3-48e5-9779-b4509f67497f)
+
 
 # Evaluation & Analysis
 # Related Work
