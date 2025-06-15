@@ -45,5 +45,13 @@ LSTM은 RNN의 한 종류로, 기존 RNN이 가진 장기 의존성 문제(long-
 이는 단순히 바로 이전 정보뿐만 아니라, 더 과거의 중요한 정보를 장기적으로 기억하고 반영하여 미래 값을 예측할 수 있도록 설계되었습니다.
 ![LSTM구조](https://github.com/user-attachments/assets/5d643bf1-a4fe-445f-8b2f-69bf304d6ed3)
 
+위의 그림과 같이 모든 RNN 은 Neural Network 모듈을 반복시키는 체인과 같은 형태를 하고 있습니다. 기본적으로 RNN에서는 이렇게 반복되는 간단한 구조를 가지고 있습니다.
+![딥러닝2](https://github.com/user-attachments/assets/dea5472f-cea7-4461-93bf-c16be1082586)
+
+위의 그림은 LSTM 네트워크의 내부 구조를 시각화한 것입니다.
+LSTM도 똑같이 체인 구조를 가지고 있지만, 4개의 Layer가 특별한 방식으로 서로 정보를 주고 받도록 되어있습니다.
+
+![딥러닝3](https://github.com/user-attachments/assets/8e43ee6c-bb60-4a28-a87a-d77d54ad7901)
+
 # Evaluation & Analysis
 # Related Work
