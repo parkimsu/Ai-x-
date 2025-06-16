@@ -228,7 +228,8 @@ loss는 예측 확률이 정답에 얼마나 가까웠는지를 나타내는 수
 모델의 예측 성능을 더 자세히 이해하기 위해
 precision, recall, f1-score라는 세 가지 지표로 평가하였습니다.
 
-![딥러닝9](https://github.com/user-attachments/assets/42ffd225-74f1-4c34-8af0-01551bfe1310)
+![딥러닝12](https://github.com/user-attachments/assets/053b1c39-217f-424e-aeec-02029d2328ed)
+
 
 ### 각 지표 설명
 Precision :
@@ -264,7 +265,8 @@ weighted avg는 각 클래스의 등장 횟수(support)를 가중치로 반영�
 ### Confusion Matrix 분석
 Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측했는지를 구체적으로 보여준다.
 
-![딥러닝10](https://github.com/user-attachments/assets/45a3b245-ad7f-4e1e-9200-2ef954250758)
+![딥러닝11](https://github.com/user-attachments/assets/b73d5e68-deee-4f96-8e6d-01d61a34fd36)
+
 
 표의 일부를 살펴보면 다음과 같습니다.
 
@@ -286,4 +288,4 @@ Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측�
 
 
 # Related Work
-[Uploading epl_combined2.csv…]()
+
