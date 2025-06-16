@@ -216,8 +216,46 @@ history = model.fit([home_tr, home_ids_tr, away_ids_tr], y_tr_cat,
 </code></pre>
 
 
-
-
-
 # Evaluation & Analysis
+본 프로젝트에서는 LSTM 모델을 사용하여 EPL 경기 결과(홈 승리, 무승부, 원정 승리)를 예측습니다. 모델의 전체 정확도는 42.04%, loss(손실 함수 값)는 0.5108로 나타났습니다.
+정확도(accuracy)는 전체 예측 중 맞춘 비율이고,
+loss는 예측 확률이 정답에 얼마나 가까웠는지를 나타내는 수치로,
+0에 가까울수록 좋은 모델임을 의미합니다.
+따라서 이번 결과는 무작위 예측보다 좋은 수준의 성능을 보여줬다고 볼 수 있습니다.
+
+![딥러닝8](https://github.com/user-attachments/assets/51acc895-df91-4705-bb5e-14273fdadceb)
+
+모델의 예측 성능을 더 자세히 이해하기 위해
+precision, recall, f1-score라는 세 가지 지표로 평가하였습니다.
+
+![딥러닝9](https://github.com/user-attachments/assets/42ffd225-74f1-4c34-8af0-01551bfe1310)
+
+### 각 지표 설명
+Precision :
+모델이 A/D/H라고 예측한 것 중 실제로 맞은 비율로, D의 precision이 0.28이면, 무승부라고 예측한 경기 중 28%만 진짜 무승부였다는 의미입니다.
+
+Recall :
+실제로 A/D/H였던 경기 중에서 모델이 정확히 예측한 비율로 D의 recall이 0.64라면, 실제 무승부 경기의 64%를 맞췄다는 의미입니다.
+
+F1-score:
+precision과 recall의 조화 평균으로 두 지표가 모두 높아야 F1도 높아진다. D는 둘의 균형이 깨져 0.3951로 낮은 편입니다.
+
+Support:
+각 클래스가 데이터셋에 얼마나 등장했는지를 나타냅니다. 홈 승리가 가장 많고, 무승부는 상대적으로 적습니다.
+
+Classification Report 하단에는 모델의 전반적인 성능을 요약하는 세 가지 지표가 있다:
+accuracy는 전체 예측 중 정답을 맞힌 비율로, 가장 직관적인 성능 지표다.
+이번 모델의 accuracy는 0.42, 즉 전체 경기 중 약 42%를 정확히 예측했다.
+macro avg는 각 클래스(A, D, H)의 precision, recall, f1-score를 동등한 가중치로 평균 낸 값이다.
+클래스가 균형을 이뤘을 때 의미 있지만, 클래스 비율이 크게 차이 나는 경우에는 성능을 과대 또는 과소평가할 수 있다.
+weighted avg는 각 클래스의 등장 횟수(support)를 가중치로 반영해 평균을 낸 값이다.
+실제 데이터에서 홈 승리(H)가 가장 많기 때문에, H 클래스의 성능이 상대적으로 더 많이 반영된다.
+클래스 불균형이 존재하는 상황에서는 weighted avg가 모델 전체 성능을 보다 현실적으로 평가할 수 있는 기준이 된다.
+이 세 가지 수치를 함께 참고하면, 단순 정확도만 볼 때보다 훨씬 더 세밀한 모델 해석이 가능하다.
+
+Confusion Matrix 분석
+Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측했는지를 구체적으로 보여준다.
+
+
+
 # Related Work
