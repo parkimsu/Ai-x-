@@ -13,6 +13,8 @@
 [VI. Evaluation & Analysis](#Evaluation_&_Analysis)
 
 [VII. Related Work](#Related_Work)
+
+[VIII. Related Work](#Related_Work)
 # Title
 ### LSTM을 이용한 축구경기 결과 예측
 # Members
@@ -21,6 +23,14 @@
 박준호 | 데이터사이언스 전공 | 2023076508 | dpsxlwnsgh@naver.com
 
 하영현 | 전기공학 전공 | 2025062179 | voltha123@hanyang.ac.kr
+
+| 이름   | 프로젝트 내 역할 |
+|--------|------------------|
+| 송호영 | 코드 구현, 데이터 수집, 동영상 촬영, Evaluation & Analysis 작성|
+| 박준호 | 코드 구현, 데이터 수집, Mehtodology 작성, 블로그 작성|
+| 하영현 | 코드 구현, 데이터 수집, Datasets 작성|
+
+
 # Proposal (Option A)
 ### Motivation:
 최근 손흥민 선수가 활약하고 있는 토트넘 홋스퍼가 무려 17년 만에 공식 대회 우승에 도전한다는 소식이 큰 화제가 되고 있습니다. 
