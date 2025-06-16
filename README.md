@@ -74,7 +74,56 @@ Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종
 
 각 팀에 대해 홈 경기/원정 경기 모두를 고려해 순서대로 데이터를 정렬한 후, 슬라이딩 윈도우 방식으로 시퀀스를 생성합니다. 시퀀스 길이는 10으로 고정됩니다. 추가적으로 팀 ID를 Embedding 처리하기 위해 home_id, away_id를 LabelEncoder를 통해 정수 인코딩한 후, 이를 시퀀스 정체 길이에 맞게 복제하여 LSTM의 입력으로 사용합니다.
 
-![딥러닝5](https://github.com/user-attachments/assets/7b439006-1fd3-48e5-9779-b4509f67497f)
+<pre><code>df = pd.read_csv('/content/drive/MyDrive/epl_combined2.csv', encoding='cp949')
+df = df.dropna(axis=1, how='all')
+df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+df = df.dropna(subset=['FTR'])
+df['FTR'] = df['FTR'].astype(str)
+
+team_encoder = LabelEncoder()
+df['home_id'] = team_encoder.fit_transform(df['HomeTeam'].astype(str))
+df['away_id'] = team_encoder.transform(df['AwayTeam'].astype(str))
+
+le = LabelEncoder()
+df['FTR_encoded'] = le.fit_transform(df['FTR'])
+
+df = df.drop(columns=['HomeTeam', 'AwayTeam', 'FTR', 'DateTime'], errors='ignore')
+df = df.fillna(0)
+
+numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+feature_cols = [col for col in numeric_cols if col not in ['home_id', 'away_id', 'FTR_encoded']]
+
+def make_home_away_sequences(data, seq_len=10):
+    home_X, away_X, y = [], [], []
+    home_ids, away_ids = [], []
+
+    for team_id in sorted(data['home_id'].unique()):
+        team_games = data[(data['home_id'] == team_id) | (data['away_id'] == team_id)].sort_index()
+        team_games = team_games.reset_index(drop=True)
+
+        for i in range(len(team_games) - seq_len):
+            seq = team_games.iloc[i:i+seq_len]
+            target_row = team_games.iloc[i+seq_len]
+
+            home_seq = seq[seq['home_id'] == team_id][feature_cols].values
+            away_seq = seq[seq['away_id'] == team_id][feature_cols].values
+
+            if len(home_seq) >= 1 and len(away_seq) >= 1:
+                home_seq = np.pad(home_seq, ((seq_len - len(home_seq), 0), (0, 0)), mode='constant')[-seq_len:]
+                away_seq = np.pad(away_seq, ((seq_len - len(away_seq), 0), (0, 0)), mode='constant')[-seq_len:]
+
+                home_X.append(home_seq.astype(np.float32))
+                away_X.append(away_seq.astype(np.float32))
+                y.append(target_row['FTR_encoded'])
+                home_ids.append(target_row['home_id'])
+                away_ids.append(target_row['away_id'])
+
+    return np.array(home_X), np.array(away_X), np.array(y), np.array(home_ids), np.array(away_ids)
+
+home_X, away_X, y, home_ids, away_ids = make_home_away_sequences(df)
+home_X_ids = np.repeat(home_ids[:, np.newaxis], 10, axis=1)
+away_X_ids = np.repeat(away_ids[:, np.newaxis], 10, axis=1)
+</code></pre>
 
 ### 모델 입력 구조
 모델은 총 세 개의 입력을 받습니다.
@@ -98,6 +147,19 @@ away_id_input: 원정팀 ID 시퀀스.shape = (batch_size, 10)
 
 즉, 최종 입력 데이터는 shape = (batch_size, 10, 32)로 구성되며, 이는 10경기의 각 시점마다 32개의 특성을 갖는 시계열 데이터라고 할 수 있습니다.
 
+<pre><code>num_in = layers.Input(shape=(n_step, n_feat), name='num_input')
+home_id_in = layers.Input(shape=(n_step,), name='home_id_input')
+away_id_in = layers.Input(shape=(n_step,), name='away_id_input')
+
+home_emb = layers.Embedding(input_dim=N_TEAMS, output_dim=EMB_DIM)(home_id_in)
+away_emb = layers.Embedding(input_dim=N_TEAMS, output_dim=EMB_DIM)(away_id_in)
+
+home_emb = layers.TimeDistributed(layers.Dense(8))(home_emb)
+away_emb = layers.TimeDistributed(layers.Dense(8))(away_emb)
+
+x = layers.Concatenate()([num_in, home_emb, away_emb])
+</code></pre>
+
 ### LSTM 기반 시계열 처리
 첫번쨰 계층: Bidirectional(LSTM(256, return, sequences=True)) -> 시계열 정보를 양방향으로 학습하며, 다음 LSTM 계층 입력을 위해 시퀀스 형태를 유지합니다.
 
@@ -107,16 +169,55 @@ away_id_input: 원정팀 ID 시퀀스.shape = (batch_size, 10)
 
 이후 Dense(128) -> BatchNormalization() -> Dropout(0.4) 계층을 거쳐 모델의 일반화 성능을 향상시킵니다.
 
+<pre><code>x = layers.Concatenate()([num_in, home_emb, away_emb])
+x = layers.LayerNormalization()(x)
+x = layers.Bidirectional(layers.LSTM(256, return_sequences=True))(x)
+x = layers.SpatialDropout1D(0.3)(x)
+x = layers.Bidirectional(layers.LSTM(128))(x)
+x = layers.Dense(128, activation='relu')(x)
+x = layers.BatchNormalization()(x)
+x = layers.Dropout(0.4)(x)
+</code></pre>
+
 ### 출력 및 손실 함수
 출력 계층은 Dense(3, activation='softmax')로 구성되며, H, D, A 세 가지 클래스에 대한 확률값을 예측합니다.
 
 손실 함수는 Focal Loss를 사용합니다. 이는 Cross Entropy에 비해 어렵게 예측되는 샘플에 더 큰 가중치를 부여함으로써 불균형 데이터셋에서 모델의 집중력을 높입니다. 하이퍼파라미터로는 감쇠 계수 y = 2.0, 클래스별 가중치 α = [1.2, 1.5, 0.8]을 사용하여 무승부에 높은 중요도를 부여하였습니다.
 
+<pre><code>out = layers.Dense(3, activation='softmax')(x)
+
+class FocalLoss(tf.keras.losses.Loss):
+    def __init__(self, gamma=2., alpha=[1.2, 1.5, 0.8], **kwargs):
+        super().__init__(**kwargs)
+        self.gamma = gamma
+        self.alpha = tf.constant(alpha, dtype=tf.float32)
+
+    def call(self, y_true, y_pred):
+        y_pred = tf.keras.backend.clip(y_pred, tf.keras.backend.epsilon(), 1. - tf.keras.backend.epsilon())
+        ce = -y_true * tf.keras.backend.log(y_pred)
+        weight = self.alpha * tf.keras.backend.pow(1 - y_pred, self.gamma)
+        return tf.keras.backend.sum(weight * ce, axis=1)
+</code></pre>
 ### 학습 전략
 Adam 옵티마이저(learning rate = 0.0003)을 사용하여 학습 안정성과 수렴 속도를 균형 있게 확보하였고, 클래스 불균형 문제를 완화하기 위해 Focal Loss를 도입하였습니다. 또한 compute, class_weight 함수를 활용하여 데이터 내 클래스 비율에 따라 자동으로 가중치를 계산하고, 학습 시 반영함으로써 불균형 분포를 보완하였습니다.
 
 검증 손실이 8 epoch 이상 개선되지 않을 경우 학습을 종료하고, 가장 성능이 좋았던 모델 가중치를 복원하도록 설정하여 과적합을 방지하였습니다. 배치 크기는 64로 설정하였으며, 최대 80 epoch까지 학습하도록 하였습니다. 훈련 데이터 중 10%를 검증에 사용하였습니다. 
 
+<pre><code>model = models.Model([num_in, home_id_in, away_id_in], out)
+model.compile(optimizer=tf.keras.optimizers.Adam(3e-4),
+              loss=FocalLoss(),
+              metrics=['accuracy'])
+
+cb = callbacks.EarlyStopping(monitor='val_loss', patience=8, restore_best_weights=True)
+
+history = model.fit([home_tr, home_ids_tr, away_ids_tr], y_tr_cat,
+                    validation_split=0.1,
+                    epochs=80,
+                    batch_size=64,
+                    class_weight=CLASS_WEIGHT,
+                    callbacks=[cb],
+                    verbose=2)
+</code></pre>
 
 
 
