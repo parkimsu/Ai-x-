@@ -12,7 +12,7 @@
 
 [VI. Evaluation & Analysis](#Evaluation--Analysis)
 
-[VII. Video](#Video)
+[VII. Video Link](#Video)
 
 [VIII. Related Work](#Related-Work)
 # Title
