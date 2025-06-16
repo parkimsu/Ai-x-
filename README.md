@@ -142,6 +142,11 @@ away_id_input: 원정팀 ID 시퀀스.shape = (batch_size, 10)
 
 팀 ID는 고정된 벡터가 아닌 시퀀스 형태로 넣고, Embedding을 거쳐 수치피처와 동일한 시계열 공간에서 처리될 수 있도록 구성합니다.
 
+<pre><code>num_in = layers.Input(shape=(n_step, n_feat), name='num_input')
+home_id_in = layers.Input(shape=(n_step,), name='home_id_input')
+away_id_in = layers.Input(shape=(n_step,), name='away_id_input')
+</code></pre>
+
 ### Embedding 및 Concatenation
 팀 ID(home_id, away_id)는 Embedding(N_TEAMS, 8)을 거쳐 8차원 벡터로 변환됩니다.
 
