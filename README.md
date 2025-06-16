@@ -12,7 +12,7 @@
 
 [VI. Evaluation & Analysis](#Evaluation_&_Analysis)
 
-[VII. Related Work](#Related_Work)
+[[VII. Video](#Video)]
 
 [VIII. Related Work](#Related_Work)
 # Title
@@ -306,6 +306,8 @@ Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측�
 
 또한, 모델이 과적합되거나 학습이 충분하지 않을 가능성이 있습니다. learning rate, dropout 비율, LSTM unit 수, bath size등을 조정하는 하이퍼파라미터 튜닝을 이용하여 성능 향상을 기대할 수 있습니다.
 
+# Video
+https://www.youtube.com/watch?v=QF30jZFt8F8
 
 # Related Work
 
