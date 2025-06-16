@@ -97,6 +97,7 @@ LSTM은 RNN의 한 종류로, 기존 RNN이 가진 장기 의존성 문제(long-
 ![딥러닝2](https://github.com/user-attachments/assets/dea5472f-cea7-4461-93bf-c16be1082586)
 
 위의 그림은 LSTM 네트워크의 내부 구조를 시각화한 것입니다.
+
 LSTM도 똑같이 체인 구조를 가지고 있지만, 4개의 Layer가 특별한 방식으로 서로 정보를 주고 받도록 되어있습니다.
 
 ![딥러닝3](https://github.com/user-attachments/assets/8e43ee6c-bb60-4a28-a87a-d77d54ad7901)
@@ -172,7 +173,7 @@ x = layers.Concatenate()([num_in, home_emb, away_emb])
 </code></pre>
 
 ### LSTM 기반 시계열 처리
-첫번쨰 계층: Bidirectional(LSTM(256, return, sequences=True)) -> 시계열 정보를 양방향으로 학습하며, 다음 LSTM 계층 입력을 위해 시퀀스 형태를 유지합니다.
+첫번째 계층: Bidirectional(LSTM(256, return, sequences=True)) -> 시계열 정보를 양방향으로 학습하며, 다음 LSTM 계층 입력을 위해 시퀀스 형태를 유지합니다.
 
 중간 정규화: SpatialDropout1D(0.3)을 삽입하여 overfitting 방지 및 시퀀스 feature 간 독립성을 확보합니다.
 
@@ -271,14 +272,14 @@ macro avg는 각 클래스(A, D, H)의 precision, recall, f1-score를 동등한 
 
 weighted avg는 각 클래스의 등장 횟수(support)를 가중치로 반영해 평균을 낸 값입니다.
 
-실제 데이터에서 홈 승리(H)가 가장 많기 때문에, H 클래스의 성능이 상대적으로 더 많이 반영된다.
+실제 데이터에서 홈 승리(H)가 가장 많기 때문에, H 클래스의 성능이 상대적으로 더 많이 반영됩니다.
 
 클래스 불균형이 존재하는 상황에서는 weighted avg가 모델 전체 성능을 보다 현실적으로 평가할 수 있는 기준이 됩니다.
 
 이 세 가지 수치를 함께 참고하면, 단순 정확도만 볼 때보다 훨씬 더 세밀한 모델 해석이 가능합니다.
 
 ### Confusion Matrix 분석
-Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측했는지를 구체적으로 보여준다.
+Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측했는지를 구체적으로 보여줍니다.
 
 ![딥러닝11](https://github.com/user-attachments/assets/b73d5e68-deee-4f96-8e6d-01d61a34fd36)
 
