@@ -38,6 +38,42 @@ LSTM은 데이터를 시간순으로 넣으면 과거 경기들의 영향력을 
 
 저희는 이 LSTM을 이용하여 홈팀의 승, 원정팀의 승, 무승부 등을 예측하는 모델을 만들 것입니다.
 # Datasets
+본 프로젝트에서는 English Premier League(EPL)의 1993/94부터 2020/21까지의 경기 데이터와 2000/01부터 2024/25까지의 선수 데이터를 사용하였습니다.
+
+### 불필요한 열 및 결측값 처리
+데이터셋에서 불필요한 열(Unnamed로 시작하는 열, HomeTeam, AwayTeam, FTR, DateTime)과 경기결과(FTR)가 없는 행은 제거한 뒤, 남은 결측값은 0으로 채웠습니다.
+<pre><code>df = df.dropna(axis=1, how='all')
+df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+df = df.dropna(subset=['FTR'])
+df['FTR'] = df['FTR'].astype(str)
+
+team_encoder = LabelEncoder()
+df['home_id'] = team_encoder.fit_transform(df['HomeTeam'].astype(str))
+df['away_id'] = team_encoder.transform(df['AwayTeam'].astype(str))
+
+le = LabelEncoder()
+df['FTR_encoded'] = le.fit_transform(df['FTR'])
+
+df = df.drop(columns=['HomeTeam', 'AwayTeam', 'FTR', 'DateTime'], errors='ignore')
+df = df.fillna(0)</code></pre>
+
+### 범주형 변수 인코딩
+팀 이름(HomeTeam, AwayTeam)과 경기결과(FTR)는 모델이 이해할 수 있도록 정수로 변환하였습니다.
+<pre><code>team_encoder = LabelEncoder()
+df['home_id'] = team_encoder.fit_transform(df['HomeTeam'].astype(str))
+df['away_id'] = team_encoder.transform(df['AwayTeam'].astype(str))
+
+le = LabelEncoder()
+df['FTR_encoded'] = le.fit_transform(df['FTR'])</code></pre>
+
+### 입력 특성 선택
+home_id, away_id, FTR_encoded를 제외한 수치형 변수는 입력 특성으로 사용합니다.
+<pre><code>numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+feature_cols = [col for col in numeric_cols if col not in ['home_id', 'away_id', 'FTR_encoded']]</code></pre>
+
+### 최종 데이터 구조
+홈팀과 원정팀의 최근 10경기가 시퀀스로 만들어지며, 타깃값은 해당 경기의 FTR입니다.
+
 # Methodology
 본 프로젝트에서는 EPL 경기 결과 예측을 위한 시계열 분류 모델로 LSTM(Long Short-Term Memory) 기반 딥러닝 모델을 구성하였으며, 클래스 불균형 문제를 완화하기 위해 Focal Loss를 손실 함수로 채택하였습니다.
 ### What is LSTM?
