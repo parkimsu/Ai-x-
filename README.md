@@ -10,7 +10,7 @@
 
 [V. Methodology](#Methodology)
 
-[VI. Evaluation & Analysis](#Evaluation-&-Analysis)
+[VI. Evaluation & Analysis](#Evaluation--Analysis)
 
 [VII. Video](#Video)
 
