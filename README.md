@@ -74,55 +74,15 @@ Output Gate는 어떤 출력값을 출력할지 결정하는 과정으로 최종
 
 각 팀에 대해 홈 경기/원정 경기 모두를 고려해 순서대로 데이터를 정렬한 후, 슬라이딩 윈도우 방식으로 시퀀스를 생성합니다. 시퀀스 길이는 10으로 고정됩니다. 추가적으로 팀 ID를 Embedding 처리하기 위해 home_id, away_id를 LabelEncoder를 통해 정수 인코딩한 후, 이를 시퀀스 정체 길이에 맞게 복제하여 LSTM의 입력으로 사용합니다.
 
-<pre><code>df = pd.read_csv('/content/drive/MyDrive/epl_combined2.csv', encoding='cp949')
-df = df.dropna(axis=1, how='all')
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
-df = df.dropna(subset=['FTR'])
-df['FTR'] = df['FTR'].astype(str)
-
-team_encoder = LabelEncoder()
-df['home_id'] = team_encoder.fit_transform(df['HomeTeam'].astype(str))
-df['away_id'] = team_encoder.transform(df['AwayTeam'].astype(str))
-
-le = LabelEncoder()
-df['FTR_encoded'] = le.fit_transform(df['FTR'])
-
-df = df.drop(columns=['HomeTeam', 'AwayTeam', 'FTR', 'DateTime'], errors='ignore')
-df = df.fillna(0)
-
-numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
-feature_cols = [col for col in numeric_cols if col not in ['home_id', 'away_id', 'FTR_encoded']]
-
-def make_home_away_sequences(data, seq_len=10):
-    home_X, away_X, y = [], [], []
-    home_ids, away_ids = [], []
-
-    for team_id in sorted(data['home_id'].unique()):
-        team_games = data[(data['home_id'] == team_id) | (data['away_id'] == team_id)].sort_index()
-        team_games = team_games.reset_index(drop=True)
-
-        for i in range(len(team_games) - seq_len):
-            seq = team_games.iloc[i:i+seq_len]
-            target_row = team_games.iloc[i+seq_len]
-
-            home_seq = seq[seq['home_id'] == team_id][feature_cols].values
-            away_seq = seq[seq['away_id'] == team_id][feature_cols].values
-
-            if len(home_seq) >= 1 and len(away_seq) >= 1:
-                home_seq = np.pad(home_seq, ((seq_len - len(home_seq), 0), (0, 0)), mode='constant')[-seq_len:]
-                away_seq = np.pad(away_seq, ((seq_len - len(away_seq), 0), (0, 0)), mode='constant')[-seq_len:]
-
-                home_X.append(home_seq.astype(np.float32))
-                away_X.append(away_seq.astype(np.float32))
-                y.append(target_row['FTR_encoded'])
-                home_ids.append(target_row['home_id'])
-                away_ids.append(target_row['away_id'])
-
-    return np.array(home_X), np.array(away_X), np.array(y), np.array(home_ids), np.array(away_ids)
+<pre><code>df = pd.read_csv('epl_combined2.csv', encoding='cp949')
+df = df.dropna(subset=['FTR']).fillna(0)
+df['home_id'] = LabelEncoder().fit_transform(df['HomeTeam'])
+df['away_id'] = LabelEncoder().fit_transform(df['AwayTeam'])
+df['FTR_encoded'] = LabelEncoder().fit_transform(df['FTR'])
 
 home_X, away_X, y, home_ids, away_ids = make_home_away_sequences(df)
-home_X_ids = np.repeat(home_ids[:, np.newaxis], 10, axis=1)
-away_X_ids = np.repeat(away_ids[:, np.newaxis], 10, axis=1)
+home_X_ids = np.repeat(home_ids[:, None], 10, axis=1)
+away_X_ids = np.repeat(away_ids[:, None], 10, axis=1)
 </code></pre>
 
 ### 모델 입력 구조
