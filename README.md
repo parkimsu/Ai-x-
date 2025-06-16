@@ -289,3 +289,11 @@ Confusion Matrix는 모델이 어떤 클래스(A, D, H)를 얼마나 잘 예측�
 
 # Related Work
 
+### 데이터 수집
+https://www.kaggle.com/datasets/irkaal/english-premier-league-results
+
+https://fbref.com/en/comps/9/stats/Premier-League-Stats#site_menu_link
+
+### 참고 사이트
+https://wikidocs.net/152773
+
