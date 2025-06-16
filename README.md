@@ -10,11 +10,11 @@
 
 [V. Methodology](#Methodology)
 
-[VI. Evaluation & Analysis](#Evaluation_&_Analysis)
+[VI. Evaluation-&-Analysis](#Evaluation-&-Analysis)
 
 [VII. Video](#Video)
 
-[VIII. Related Work](#Related_Work)
+[VIII. Related Work](#Related-Work)
 # Title
 ### LSTM을 이용한 축구경기 결과 예측
 # Members
